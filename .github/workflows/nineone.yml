@@ -1,0 +1,23 @@
+name: zodgame
+
+on:
+  schedule:
+  - cron: "39 17 0/2 * *"
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install requirements
+      run: |
+        pip3 install -r ./requirements.txt
+    - name: Run
+      run: |
+        python3 ./spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
+    - uses: gautamkrishnar/keepalive-workflow@master

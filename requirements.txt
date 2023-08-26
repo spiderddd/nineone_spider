@@ -1,0 +1,7 @@
+js2py
+lxml
+pymysql
+dbutils
+requests
+tqdm
+bs4
