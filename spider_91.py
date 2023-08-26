@@ -26,6 +26,7 @@ cate_order = {
     "rf": {"short_name": "rf", "level": 2},
     "hot": {"short_name": "hot", "level": 2},
 }
+spider_mysql = None
 
 
 def update_category(video_dict):
@@ -219,8 +220,6 @@ def fix_new_item():
     spider_mysql.ExecNonQuery(sql)
 
 
-cate_infos = get_video_infos()
-
 if __name__ == '__main__':
     print("Strat")
     mysql_host = sys.argv[1]
@@ -228,6 +227,7 @@ if __name__ == '__main__':
     mysql_pwd = sys.argv[3]
 
     spider_mysql = MYSQL(host=mysql_host, user=mysql_user, pwd=mysql_pwd, db="spider")
+    cate_infos = get_video_infos()
     get_video_by_category("top")
     get_video_by_category("tf")
     get_video_by_category("mf")
