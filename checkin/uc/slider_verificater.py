@@ -45,7 +45,7 @@ def onload_save_img(url, filename="image.png", cookie=""):
             response = requests.get(url)
 
     except Exception as e:
-        print('图片下载失败')
+        print('Image download failed')
         raise e
     else:
         with open(filename, 'wb') as f:
@@ -101,7 +101,7 @@ def get_slide_distance(slider_img, background_img, top_num=0, correct=0):
     top, left = np.unravel_index(result.argmax(), result.shape)
 
     # 背景图缺口坐标
-    print('当前滑块缺口位置', (left, top, left + width, top + height))
+    print('Current slider gap position', (left, top, left + width, top + height))
 
     # 判读是否需求保存识别过程中的截图文件
     loc = [(left + correct, top + correct), (left + width - correct, top + height - correct)]
@@ -192,11 +192,11 @@ class SliderVerification:
 
         # 获取滑动前页面的url网址
         start_url = driver.current_url
-        print('滑动距离是: ', distance)
+        print('Distance : ', distance)
         # 根据滑动的距离生成滑动轨迹
         locus = self.get_slide_locus(distance)
 
-        print('生成的滑动轨迹为:{},轨迹的距离之和为{}'.format(locus, distance))
+        print('The generated sliding trajectory is:{},and the sum of the distances between the trajectories is{}'.format(locus, distance))
 
         # 按下鼠标左键
         ActionChains(driver).click_and_hold(slide_element).perform()

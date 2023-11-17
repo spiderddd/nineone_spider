@@ -3,7 +3,8 @@ import requests
 import sys
 
 import datetime
-
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 
 def south_plus_login(cookie, cid=15):
     this_host = "www.south-plus.net"
