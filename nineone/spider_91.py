@@ -101,18 +101,22 @@ def get_video_urls(page_url, category):
 
 
 def get_video_link(content):
-    a = re.compile('document.write\(strencode2\("(.*)"').findall(content)
-    if len(a) > 0:
-        a = a[0].split(',')
-        text = a[0].replace('"', '')
-        video_link = BeautifulSoup(strencode2(text), "html.parser").source.attrs['src']
-    else:
-        a = re.compile('document.write\(strencode\("(.*)"').findall(content)
-        text = a[0].split(',')
-        video_link = \
-            BeautifulSoup(strencode(text[0].replace('"', ''), text[1].replace('"', ''), text[2].replace('"', '')),
-                          "html.parser").source.attrs['src']
-    return video_link
+    try:
+        a = re.compile('document.write\(strencode2\("(.*)"').findall(content)
+        if len(a) > 0:
+            a = a[0].split(',')
+            text = a[0].replace('"', '')
+            video_link = BeautifulSoup(strencode2(text), "html.parser").source.attrs['src']
+        else:
+            a = re.compile('document.write\(strencode\("(.*)"').findall(content)
+            text = a[0].split(',')
+            video_link = \
+                BeautifulSoup(strencode(text[0].replace('"', ''), text[1].replace('"', ''), text[2].replace('"', '')),
+                              "html.parser").source.attrs['src']
+        return video_link
+    except Exception as e:
+        print(e)
+        return ""
 
 
 def get_video_title(content):
