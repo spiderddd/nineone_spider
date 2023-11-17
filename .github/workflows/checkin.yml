@@ -1,8 +1,8 @@
-name: nineone
+name: checkin-easy
 
 on:
   schedule:
-  - cron: "39 17 1/2 * *"
+  - cron: "30 3 * * *"
   push:
     branches: [ main ]
   pull_request:
@@ -11,13 +11,13 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
     - name: Install requirements
       run: |
-        pip3 install -r ./nineone/requirements.txt
+        pip3 install -r ./checkin/requirements.txt
     - name: Run
       run: |
-        python3 ./nineone/spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
+        python3 ./checkin/jobs.py "${{secrets.SOUTH_PLUS_COOKIE}}"
     - uses: gautamkrishnar/keepalive-workflow@master

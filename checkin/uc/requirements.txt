@@ -1,0 +1,5 @@
+requests
+undetected-chromedriver
+numpy
+opencv-python
+Pillow
