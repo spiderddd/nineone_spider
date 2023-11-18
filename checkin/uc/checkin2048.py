@@ -7,7 +7,7 @@ from io import BytesIO
 from PIL import Image
 
 from lxml import etree
-
+from retrying import retry
 import requests
 from driver_utils import get_driver
 from slider_verificater import SliderVerification, get_top
@@ -141,7 +141,8 @@ class Site2048:
             time.sleep(safe_wait_time)
             self._login_with_input()
 
-    def signon(self):
+    @retry(stop_max_attempt_number=3)
+    def qiandao(self):
         from selenium.webdriver.common.by import By
         self.driver.get(self.host + "hack.php?H_name=qiandao")
         time.sleep(safe_wait_time)
@@ -172,19 +173,22 @@ class Site2048:
 
     def apply_jobs(self):
         from selenium.webdriver.common.by import By
-        self.driver.get(self.host + "jobcenter.php?action=list")
-        time.sleep(safe_wait_time)
-        choose_target = self.driver.find_element(By.XPATH,
-                                                 '//*[@id="apply_12"]')
-        choose_target.click()
-        time.sleep(1)
+        try:
+            self.driver.get(self.host + "jobcenter.php?action=list")
+            time.sleep(safe_wait_time)
+            choose_target = self.driver.find_element(By.XPATH,
+                                                     '//*[@id="apply_12"]')
+            choose_target.click()
+            time.sleep(1)
 
-        self.driver.get(self.host + "jobcenter.php?action=applied")
-        time.sleep(safe_wait_time)
-        choose_target = self.driver.find_element(By.XPATH,
-                                                 '//*[@id="gain_12"]')
-        choose_target.click()
-        time.sleep(1)
+            self.driver.get(self.host + "jobcenter.php?action=applied")
+            time.sleep(safe_wait_time)
+            choose_target = self.driver.find_element(By.XPATH,
+                                                     '//*[@id="gain_12"]')
+            choose_target.click()
+            time.sleep(1)
+        except Exception as e:
+            print(e)
 
 
 
@@ -215,5 +219,5 @@ if __name__ == '__main__':
     host = get_latest_url()
     site = Site2048(host, user_name, password, answer)
     site.login()
-    site.signon()
     site.apply_jobs()
+    site.qiandao()
