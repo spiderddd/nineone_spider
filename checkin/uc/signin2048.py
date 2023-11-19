@@ -14,7 +14,7 @@ from slider_verificater import SliderVerification, get_top
 import sys
 import urllib.parse
 
-safe_wait_time = 20
+safe_wait_time = 5
 current_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_path)
 slider = 'slider.jpg'
@@ -69,8 +69,6 @@ js = """
         setTimeout(_replace, 1000 );
         """
 
-
-# https://data.2qssj.com/hyverify//Image.png.php?aid=2100043001&accver=1&showtype=popup&ua=TW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzExMy4wLjAuMCBTYWZhcmkvNTM3LjM2&noheader=1&fb=1&enableDarkMode=0&fpinfo=fpsig%3Dundefined&grayscale=1&clientype=2&subsid=4&sess=&fwidth=0&sid=6FcwrpiE&forcestyle=undefined&wxLang=&tcScale=1&uid=&cap_cd=&rnd=304584&TCapIframeLoadTime=undefined&prehandleLoadTime=9491&createIframeStart=1683709891889&rand=94321702&websig=T2wS2gl4AbCKrZD2CBjO2VAMDHEPDHmW9Zo16Qt6rwGZMKQOM1dELdQPlVeocHBbgqRb7BXnxeC0pTN2Jq6VKMlwhFbAMcbtItKEvisiCuirEwjOdfjnsKZPQ1QdTsMb&vsig=cXgN6Ov90UqDGQRjv2NdCmtSdAwxs0OKWvXS0JQ9d8CjNTJ0LWdN0MfcNSQ6ReGnQe6PoMOIJQsWk2WvNz0MCepPx6LEaRsqwn7b1Kj0bRWCJtyWixjkSPzFKAKlS3SFgOgWZGW2Yt5hcs5Agdlzsa64bFeu8xzdBWzbdMS26MY6SYc&img_index=2
 
 class Site2048:
     def __init__(self, host_name, user, pwd, answer):
@@ -141,8 +139,7 @@ class Site2048:
             time.sleep(safe_wait_time)
             self._login_with_input()
 
-    @retry(stop_max_attempt_number=3)
-    def qiandao(self):
+    def _sign_in(self):
         from selenium.webdriver.common.by import By
         self.driver.get(self.host + "hack.php?H_name=qiandao")
         time.sleep(safe_wait_time)
@@ -167,9 +164,32 @@ class Site2048:
         style_str = slider_ele.get_attribute("style")
         top_num = get_top(style_str)
         self.SliderVerification.set_cookie(self.driver.get_cookies())
-        dis = self.SliderVerification.get_element_slide_distance(background, slider, top_num=top_num)
+        dis = self.SliderVerification.get_element_slide_distance(slider, background, top_num=top_num)
         self.SliderVerification.slide_verification(self.driver, slider_ele, dis)
         time.sleep(safe_wait_time)
+
+    @retry(stop_max_attempt_number=3)
+    def sign_in(self):
+        try:
+            self._sign_in()
+        except Exception as e:
+            print(e)
+        if self.check_sign_in_status():
+            print("Haven't check in today")
+            raise Exception("Failed to check in")
+
+    def check_sign_in_status(self):
+        from selenium.webdriver.common.by import By
+        self.driver.get(self.host + "hack.php?H_name=qiandao")
+        time.sleep(safe_wait_time)
+        choose_target = self.driver.find_element(By.XPATH,
+                                                 '//*[@id="main"]/div[2]/table/tbody/tr/td[1]/div[2]/table/tbody/tr[2]/td')
+
+        if "今天未签到" in choose_target.text:
+            return True
+        else:
+            print("Signed in today")
+            return False
 
     def apply_jobs(self):
         from selenium.webdriver.common.by import By
@@ -190,11 +210,20 @@ class Site2048:
         except Exception as e:
             print(e)
 
+    def reget_driver(self):
+        try:
+            self.driver.close()
+        except Exception as e:
+            print(e)
+        self.driver = get_driver()
 
-
+    def run(self):
+        self.login()
+        self.apply_jobs()
+        self.sign_in()
 
     def __del__(self):
-        self.driver.close()
+        self.driver.quit()
 
 
 def get_latest_url():
@@ -218,6 +247,4 @@ if __name__ == '__main__':
     answer = sys.argv[3]
     host = get_latest_url()
     site = Site2048(host, user_name, password, answer)
-    site.login()
-    site.apply_jobs()
-    site.qiandao()
+    site.run()
