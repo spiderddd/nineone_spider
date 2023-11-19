@@ -11,10 +11,13 @@ from bs4 import BeautifulSoup
 from lxml import etree
 import sys
 from MysqlDao import MYSQL
+import os
 
 requests.adapters.DEFAULT_RETRIES = 5
 s = requests.session()
 s.keep_alive = False
+current_path = os.path.dirname(os.path.abspath(__file__))
+os.chdir(current_path)
 
 # 收藏最多 每月最热 本月最热 本月收藏 本月讨论  当前最热 最近加精
 cate_order = {
