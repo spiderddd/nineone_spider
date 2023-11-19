@@ -19,5 +19,5 @@ jobs:
         pip3 install -r ./checkin/uc/requirements.txt
     - name: Run
       run: |
-        python3 ./checkin/uc/checkin2048.py "${{secrets.USER2048}}" "${{secrets.PWD2048}}" "${{secrets.ANS2048}}"
+        python3 ./checkin/uc/signin2048.py "${{secrets.USER2048}}" "${{secrets.PWD2048}}" "${{secrets.ANS2048}}"
     - uses: gautamkrishnar/keepalive-workflow@master
