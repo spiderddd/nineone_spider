@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 import sys
-from utils.MysqlDao import MYSQL
+from checkin.utils.MysqlDao import MYSQL
 import os
 
 requests.adapters.DEFAULT_RETRIES = 5

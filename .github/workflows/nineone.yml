@@ -1,8 +1,8 @@
 name: nineone
 
 on:
-  schedule:
-  - cron: "39 17 1/2 * *"
+#  schedule:
+#  - cron: "39 17 1/2 * *"
   push:
     branches: [ main ]
   pull_request:
@@ -16,8 +16,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install requirements
       run: |
-        pip3 install -r ./nineone/requirements.txt
+        pip3 install -r ./checkin/nineone/requirements.txt
     - name: Run
       run: |
-        python3 ./nineone/spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
+        python3 ./checkin/nineone/spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
     - uses: gautamkrishnar/keepalive-workflow@master

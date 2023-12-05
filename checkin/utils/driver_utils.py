@@ -1,6 +1,6 @@
 import undetected_chromedriver as uc
 
-from utils.utils import check_local
+from checkin.utils.utils import check_local
 
 local_mode = check_local()
 

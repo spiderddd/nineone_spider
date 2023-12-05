@@ -10,8 +10,9 @@ from lxml import etree
 from retrying import retry
 import requests
 
-from utils.constant import DEFAULT_2048_HOST
-from utils.driver_utils import get_driver
+from checkin.utils.constant import DEFAULT_2048_HOST
+from checkin.utils.driver_utils import get_driver
+from checkin.utils.utils import check_local
 from slider_verificater import SliderVerification, get_top
 import sys
 import urllib.parse
@@ -229,6 +230,9 @@ class Site2048:
 
 
 def get_latest_url():
+    if check_local():
+        return DEFAULT_2048_HOST
+
     res = requests.get("https://hjd.tw")
     tree = etree.HTML(res.text)
     urls = tree.xpath("/html/body/center/div/ul/li[2]/a/@href")
