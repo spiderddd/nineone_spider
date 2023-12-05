@@ -19,5 +19,5 @@ jobs:
         pip3 install -r ./checkin/nineone/requirements.txt
     - name: Run
       run: |
-        cd ./checkin && python3 ./nineone/spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
+        python3 ./checkin/nineone/spider_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}"
     - uses: gautamkrishnar/keepalive-workflow@master
