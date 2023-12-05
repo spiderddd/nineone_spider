@@ -9,7 +9,9 @@ from PIL import Image
 from lxml import etree
 from retrying import retry
 import requests
-from driver_utils import get_driver
+
+from utils.constant import DEFAULT_2048_HOST
+from utils.driver_utils import get_driver
 from slider_verificater import SliderVerification, get_top
 import sys
 import urllib.parse
@@ -241,10 +243,21 @@ def base64_to_image(base64_str, img_name):
     img.save(img_name)
 
 
+def run(host, user_name, password, answer):
+    try:
+        site = Site2048(host, user_name, password, answer)
+        site.run()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
 if __name__ == '__main__':
     user_name = sys.argv[1]
     password = sys.argv[2]
     answer = sys.argv[3]
     host = get_latest_url()
-    site = Site2048(host, user_name, password, answer)
-    site.run()
+    success_flag = run(host, user_name, password, answer)
+    if not success_flag:
+        run(DEFAULT_2048_HOST, user_name, password, answer)

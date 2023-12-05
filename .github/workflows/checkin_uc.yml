@@ -2,7 +2,7 @@ name: checkin-uc
 
 on:
   schedule:
-  - cron: "30 4 * * *"
+  - cron: "30 4,16 * * *"
   push:
     branches: [ main ]
   pull_request:
