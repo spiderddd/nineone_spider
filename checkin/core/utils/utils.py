@@ -1,6 +1,6 @@
 import os
 
-from checkin.utils.constant import LOCAL_FLAG_PATH
+from core.utils.constant import LOCAL_FLAG_PATH
 
 
 def check_local():

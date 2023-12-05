@@ -16,8 +16,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install requirements
       run: |
-        pip3 install -r ./checkin/uc/requirements.txt
+        pip3 install -r ./checkin/core/uc/requirements.txt
     - name: Run
       run: |
-        python3 ./checkin/uc/signin2048.py "${{secrets.USER2048}}" "${{secrets.PWD2048}}" "${{secrets.ANS2048}}"
+        python3 ./checkin/job_2048.py "${{secrets.USER2048}}" "${{secrets.PWD2048}}" "${{secrets.ANS2048}}"
     - uses: gautamkrishnar/keepalive-workflow@master

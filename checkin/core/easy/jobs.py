@@ -46,10 +46,14 @@ def south_plus_login(cookie, cid=15):
     print(response.text)
 
 
-if __name__ == "__main__":
-    south_plus_cookie = sys.argv[1]
+def run(south_plus_cookie):
     south_plus_login(south_plus_cookie)
     today = datetime.date.today()
     weekday_index = today.weekday()
     if weekday_index == 0:
         south_plus_login(cookie=south_plus_cookie, cid=14)
+
+
+if __name__ == "__main__":
+    south_plus_cookie = sys.argv[1]
+    run(south_plus_cookie)

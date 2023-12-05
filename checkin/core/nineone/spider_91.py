@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 import sys
-from checkin.utils.MysqlDao import MYSQL
+from core.nineone.MysqlDao import MYSQL
 import os
 
 requests.adapters.DEFAULT_RETRIES = 5
@@ -227,12 +227,8 @@ def fix_new_item():
     spider_mysql.ExecNonQuery(sql)
 
 
-if __name__ == '__main__':
-    print("Strat")
-    mysql_host = sys.argv[1]
-    mysql_user = sys.argv[2]
-    mysql_pwd = sys.argv[3]
-
+def run(mysql_host,mysql_user,mysql_pwd):
+    global spider_mysql, cate_infos
     spider_mysql = MYSQL(host=mysql_host, user=mysql_user, pwd=mysql_pwd, db="spider")
     cate_infos = get_video_infos()
     get_video_by_category("top")
@@ -243,3 +239,12 @@ if __name__ == '__main__':
     get_video_by_category("top&m=-1", page_limit=17)
     get_video_by_category("hot")
     fix_new_item()
+
+
+if __name__ == '__main__':
+    print("Strat")
+    mysql_host = sys.argv[1]
+    mysql_user = sys.argv[2]
+    mysql_pwd = sys.argv[3]
+
+    run(mysql_host,mysql_user,mysql_pwd)

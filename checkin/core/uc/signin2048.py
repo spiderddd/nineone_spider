@@ -10,11 +10,10 @@ from lxml import etree
 from retrying import retry
 import requests
 
-from checkin.utils.constant import DEFAULT_2048_HOST
-from checkin.utils.driver_utils import get_driver
-from checkin.utils.utils import check_local
-from slider_verificater import SliderVerification, get_top
-import sys
+from core.utils.constant import DEFAULT_2048_HOST
+from core.utils.driver_utils import get_driver
+from core.utils.utils import check_local
+from core.uc.slider_verificater import SliderVerification, get_top
 import urllib.parse
 
 safe_wait_time = 5
@@ -256,12 +255,3 @@ def run(host, user_name, password, answer):
         print(e)
         return False
 
-
-if __name__ == '__main__':
-    user_name = sys.argv[1]
-    password = sys.argv[2]
-    answer = sys.argv[3]
-    host = get_latest_url()
-    success_flag = run(host, user_name, password, answer)
-    if not success_flag:
-        run(DEFAULT_2048_HOST, user_name, password, answer)
