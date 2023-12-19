@@ -234,7 +234,7 @@ def get_latest_url():
 
     res = requests.get("https://hjd.tw")
     tree = etree.HTML(res.text)
-    urls = tree.xpath("/html/body/center/div/ul/li[2]/a/@href")
+    urls = tree.xpath("/html/body/div[3]/table/tbody/tr[2]/td[1]/a")
     return urls[0].replace("https://", "")
 
 
