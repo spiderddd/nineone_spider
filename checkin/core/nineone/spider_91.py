@@ -13,11 +13,20 @@ import sys
 from core.nineone.MysqlDao import MYSQL
 import os
 
+from core.utils.constant import proxies
+from core.utils.utils import check_local
+
 requests.adapters.DEFAULT_RETRIES = 5
 s = requests.session()
 s.keep_alive = False
+
+if check_local():
+    s.proxies = proxies
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_path)
+
+host_name = '91porn.com'
 
 # 收藏最多 每月最热 本月最热 本月收藏 本月讨论  当前最热 最近加精
 cate_order = {
@@ -38,7 +47,6 @@ def update_category(video_dict):
     new_cate = video_dict["category"]
     if not current_cate or cate_order[new_cate]["level"] < cate_order[current_cate]["level"]:
         sql = f"UPDATE nineone SET category='{new_cate}', to_update_cate=1 WHERE viewkey='{viewkey}'"
-        print(sql)
         spider_mysql.ExecNonQuery(sql)
 
 
@@ -47,7 +55,6 @@ def insert_record(video_dict):
         sql = f'INSERT into nineone(viewkey, title,img,link,video_link,update_time,upper_link,category) values ' \
               f'("{video_dict["viewkey"]}","{video_dict["title"]}","{video_dict["img"]}","{video_dict["link"]}",' \
               f'"{video_dict["video_link"]}","{video_dict["update_time"]}","{video_dict["upper_link"]}","{video_dict["category"]}")'
-        print(sql)
         spider_mysql.ExecNonQuery(sql)
         cate_infos[video_dict["viewkey"]] = video_dict["category"]
     else:
@@ -87,9 +94,7 @@ def get_video_urls(page_url, category):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36Name',
         'Referer': 'http://91porn.com'}
-    print(page_url)
     get_page = s.get(url=page_url, headers=headers)
-    print(get_page)
     divs = BeautifulSoup(get_page.text, "html.parser").find_all("div", class_="well well-sm videos-text-align")
     viewurl = []
 
@@ -140,13 +145,17 @@ def get_video_update_time(content):
 
 
 def get_upper_link(content):
-    # a = re.compile('https://f1105.workarea3.live/uprofile.php?UID=(.*)">').findall(content)
+    # a = re.compile('https://{host_name}/uprofile.php?UID=(.*)">').findall(content)
     try:
-        if "匿名" in content:
-            return "nobody"
         html = etree.HTML(content)
-        upper_link = html.xpath('//*[@id="videodetails-content"]/div[2]/span[2]/a[1]/@href')[0]
-        return upper_link
+        upper_detail_divs = html.xpath('//*[@id="videodetails-content"]')
+        upper_detail_div = upper_detail_divs[1]
+        title = upper_detail_div.find('.//a')
+        upper_link = title.get('href')
+        if 'uprofile' in upper_link:
+            return upper_link
+        else:
+            return 'nobody'
     except:
         return ""
 
@@ -163,7 +172,6 @@ def get_video_detail(video_dict):
     # base_req = s.get(url=f"https://f1105.workarea3.live/view_video.php?viewkey=f{video_dict['viewkey']}", headers=headers)
     base_req = s.get(url=video_dict['link'], headers=headers)
     content = base_req.content.decode('utf-8')
-    # print(base_req.text)
     upper_link = get_upper_link(content)
     update_time = get_video_update_time(content)
     video_link = get_video_link(content)
@@ -179,11 +187,10 @@ def get_video_detail(video_dict):
 def get_video_by_category(category, page_limit=5):
     inputPage = 1
     page = int(inputPage)
-    base_url = 'https://f1105.workarea3.live/v.php?category={}&viewtype=basic&page='.format(category)
+    base_url = f'https://{host_name}/v.php?category={category}&viewtype=basic&page='
     while page <= page_limit:
         page_url = base_url + str(page)
         videos_dict = get_video_urls(page_url, category)
-        print(videos_dict)
         for video_dict in videos_dict:
             get_video_detail(video_dict)
         page += 1
@@ -195,16 +202,14 @@ def update_time():
     headers = {'Accept-Language': 'zh-CN,zh;q=0.9',
                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0',
                'X-Forwarded-For': random_ip(),
-               'referer': "https://f1105.workarea3.live/v.php?category={top}&viewtype=basic&page=2",
+               'referer': f"https://{host_name}/v.php?category=top&viewtype=basic&page=2",
                'Content-Type': 'multipart/form-data; session_language=cn_CN',
                'Connection': 'keep-alive',
                'Upgrade-Insecure-Requests': '1',
                }
     for link, viewkey in res:
-        print(link, viewkey)
         base_req = s.get(url=link, headers=headers)
         content = base_req.content.decode('utf-8')
-        # print(base_req.text)
         update_time = get_video_update_time(content)
 
         update_sql = f"UPDATE nineone SET update_time='{update_time}' WHERE viewkey='{viewkey}'"
@@ -227,9 +232,9 @@ def fix_new_item():
     spider_mysql.ExecNonQuery(sql)
 
 
-def run(mysql_host,mysql_user,mysql_pwd):
+def run(mysql_host,mysql_user,mysql_pwd, mysql_port):
     global spider_mysql, cate_infos
-    spider_mysql = MYSQL(host=mysql_host, user=mysql_user, pwd=mysql_pwd, db="spider")
+    spider_mysql = MYSQL(host=mysql_host, user=mysql_user, pwd=mysql_pwd, db="spider",port=mysql_port)
     cate_infos = get_video_infos()
     get_video_by_category("top")
     get_video_by_category("tf")
@@ -242,9 +247,9 @@ def run(mysql_host,mysql_user,mysql_pwd):
 
 
 if __name__ == '__main__':
-    print("Strat")
     mysql_host = sys.argv[1]
     mysql_user = sys.argv[2]
     mysql_pwd = sys.argv[3]
+    mysql_port = sys.argv[4]
 
-    run(mysql_host,mysql_user,mysql_pwd)
+    run(mysql_host,mysql_user,mysql_pwd, mysql_port)

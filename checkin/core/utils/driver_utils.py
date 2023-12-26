@@ -1,5 +1,6 @@
 import undetected_chromedriver as uc
 
+from core.utils.constant import http_proxy
 from core.utils.utils import check_local
 
 local_mode = check_local()
@@ -11,7 +12,7 @@ def get_driver():
     browser_executable_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
     options.add_argument("--disable-popup-blocking")
     if local_mode:
-        options.add_argument('--proxy-server=http://127.0.0.1:7890')
+        options.add_argument(f'--proxy-server={http_proxy}')
         driver_executable_path = r"C:\Users\32506\AppData\Roaming\undetected_chromedriver\undetected_chromedriver.exe"
 
     else:

@@ -6,5 +6,6 @@ if __name__ == '__main__':
     mysql_host = sys.argv[1]
     mysql_user = sys.argv[2]
     mysql_pwd = sys.argv[3]
+    mysql_port = int(sys.argv[4])
 
-    run(mysql_host, mysql_user, mysql_pwd)
+    run(mysql_host, mysql_user, mysql_pwd, mysql_port)
