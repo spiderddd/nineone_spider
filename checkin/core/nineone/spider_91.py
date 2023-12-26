@@ -190,9 +190,13 @@ def get_video_by_category(category, page_limit=5):
     base_url = f'https://{host_name}/v.php?category={category}&viewtype=basic&page='
     while page <= page_limit:
         page_url = base_url + str(page)
+        print(page_url)
         videos_dict = get_video_urls(page_url, category)
         for video_dict in videos_dict:
-            get_video_detail(video_dict)
+            try:
+                get_video_detail(video_dict)
+            except Exception as e:
+                print(video_dict, e)
         page += 1
 
 
