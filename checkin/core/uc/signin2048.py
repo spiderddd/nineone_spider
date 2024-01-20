@@ -88,19 +88,19 @@ class Site2048:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import Select
         user_target = self.driver.find_element(By.XPATH,
-                                               '//*[@id="main"]/form/div/table/tbody/tr[2]/td/div/dl[1]/dd/input')
+                                               '//*[@id="main"]/form/div/table/tbody/tr/td/div/dl[1]/dd/input')
         pwd_target = self.driver.find_element(By.XPATH,
-                                              '//*[@id="main"]/form/div/table/tbody/tr[2]/td/div/dl[2]/dd/input')
+                                              '//*[@id="main"]/form/div/table/tbody/tr/td/div/dl[2]/dd/input')
         user_target.send_keys(self.user)
         pwd_target.send_keys(self.pwd)
         s1 = Select(
-            self.driver.find_element(By.XPATH, '//*[@id="main"]/form/div/table/tbody/tr[2]/td/div/dl[3]/dd/select'))
+            self.driver.find_element(By.XPATH, '//*[@id="main"]/form/div/table/tbody/tr/td/div/dl[3]/dd/select'))
         s1.select_by_index(8)
         answer_target = self.driver.find_element(By.XPATH,
-                                                 '//*[@id="main"]/form/div/table/tbody/tr[2]/td/div/dl[4]/dd/input')
+                                                 '//*[@id="main"]/form/div/table/tbody/tr/td/div/dl[4]/dd/input')
         answer_target.send_keys(self.answer)
         login_target = self.driver.find_element(By.XPATH,
-                                                '//*[@id="main"]/form/div/table/tbody/tr[2]/td/div/dl[7]/dd/input')
+                                                '//*[@id="main"]/form/div/table/tbody/tr/td/div/dl[7]/dd/input')
         login_target.click()
 
         time.sleep(safe_wait_time)
