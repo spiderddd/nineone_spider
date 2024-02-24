@@ -222,7 +222,7 @@ class Site2048:
     def run(self):
         self.login()
         self.apply_jobs()
-        self.sign_in()
+        # self.sign_in()
 
     def __del__(self):
         self.driver.quit()
