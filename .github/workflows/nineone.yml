@@ -7,8 +7,11 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
+
+permissions:
+  actions: write
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -20,4 +23,4 @@ jobs:
     - name: Run
       run: |
         python3 ./checkin/job_91.py "${{secrets.MYSQL_HOST}}" "${{secrets.MYSQL_USER}}" "${{secrets.MYSQL_PWD}}" "${{secrets.MYSQL_PORT}}"
-    - uses: gautamkrishnar/keepalive-workflow@master
+    - uses: gautamkrishnar/keepalive-workflow@v2
