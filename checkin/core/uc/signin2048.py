@@ -229,14 +229,15 @@ class Site2048:
 
 
 def get_latest_url():
-    if check_local():
-        return DEFAULT_2048_HOST
-    res = requests.get("https://hjd.tw")
-    tree = etree.HTML(res.text)
-    urls = tree.xpath("/html/body/div[3]/table/tbody/tr[2]/td[1]/a")
-    url_target = urls[0]
-    link = url_target.get("href")
-    return link.replace("https://", "")
+    # if check_local():
+    #     return DEFAULT_2048_HOST
+    # res = requests.get("https://hjd.tw")
+    # tree = etree.HTML(res.text)
+    # urls = tree.xpath("/html/body/div[3]/table/tbody/tr[2]/td[1]/a")
+    # url_target = urls[0]
+    # link = url_target.get("href")
+    # return link.replace("https://", "")
+    return "hjd2048.com"
 
 
 def base64_to_image(base64_str, img_name):
