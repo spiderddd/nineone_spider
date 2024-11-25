@@ -11,7 +11,7 @@ def south_plus_login(cookie, cid=15):
 
     header = {
         'Referer': f'https://{this_host}/plugin.php?H_name-tasks.html',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Cookie': cookie
     }
     nowtime = str(int(time.time() * 1000))
