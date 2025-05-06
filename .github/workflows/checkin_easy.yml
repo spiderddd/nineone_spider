@@ -1,8 +1,8 @@
 name: checkin-easy
 
 on:
-  schedule:
-  - cron: "30 3 * * *"
+  # schedule:
+  # - cron: "30 3 * * *"
   push:
     branches: [ main ]
   pull_request:
